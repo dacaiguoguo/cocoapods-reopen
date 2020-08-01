@@ -6,8 +6,8 @@ require 'cocoapods-reopen/gem_version.rb'
 Gem::Specification.new do |spec|
   spec.name          = 'cocoapods-reopen'
   spec.version       = CocoapodsReopen::VERSION
-  spec.authors       = ['sunyanguo']
-  spec.email         = ['sunyanguo@lvmama.com']
+  spec.authors       = ['dacaiguoguo']
+  spec.email         = ['dacaiguoguo@gmail.com']
   spec.description   = %q{A short description of cocoapods-reopen.}
   spec.summary       = %q{A longer description of cocoapods-reopen.}
   spec.homepage      = 'https://github.com/EXAMPLE/cocoapods-reopen'

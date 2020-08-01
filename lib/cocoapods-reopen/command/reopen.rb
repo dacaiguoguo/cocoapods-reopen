@@ -18,26 +18,52 @@ module Pod
     #       in the `plugins.json` file, once your plugin is released.
     #
     class Reopen < Command
-      self.summary = 'Short description of cocoapods-reopen.'
-
+      self.summary = 'Reopen the workspace'
       self.description = <<-DESC
-        Longer description of cocoapods-reopen.
+        Close and opens the workspace in Xcode. If no workspace found in the current directory,
+        looks up parent it finds one.
       DESC
 
-      self.arguments = 'NAME'
-
       def initialize(argv)
-        @name = argv.shift_argument
+        @workspace = find_workspace_in(Pathname.pwd)
         super
       end
 
       def validate!
         super
-        help! 'A Pod name is required.' unless @name
+        raise Informative, 'No xcode workspace found' unless @workspace
       end
 
       def run
-        UI.puts "Add your implementation for the cocoapods-reopen plugin in #{__FILE__}"
+        ascript = <<~STR.strip_heredoc
+          tell application "Xcode"
+                  set docs to (document of every window)
+                  repeat with doc in docs
+                      if class of doc is workspace document then
+                          set docPath to path of doc
+                          if docPath begins with "#{@workspace}" then
+                              log docPath
+                              close doc
+                              return
+                          end if
+                      end if
+                  end repeat
+          end tell
+        STR
+        `osascript -e '#{ascript}'`
+        `open "#{@workspace}"`
+      end
+
+      private
+
+      def find_workspace_in(path)
+        puts "find xcworkspace at #{path}"
+        path.children.find { |fn| fn.extname == '.xcworkspace' } || find_workspace_in_example(path)
+      end
+
+      def find_workspace_in_example(path)
+        tofind = path + 'Example'
+        find_workspace_in(tofind) if tofind.exist?
       end
     end
   end
