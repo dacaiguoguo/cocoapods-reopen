@@ -8,4 +8,4 @@ A description of cocoapods-reopen.
 
 ## Usage
 
-    $ pod spec reopen POD_NAME
+    $  pod reopen
